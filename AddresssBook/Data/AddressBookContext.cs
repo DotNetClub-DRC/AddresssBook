@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AddresssBook.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace AddresssBook.Data
 {
@@ -8,5 +9,7 @@ namespace AddresssBook.Data
         {
 
         }
+
+        public DbSet<Contact> Contacts { get; set; }
     }
 }
