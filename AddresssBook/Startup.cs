@@ -1,4 +1,6 @@
 ﻿using AddresssBook.Data;
+using AddresssBook.Services;
+using AddresssBook.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -24,7 +26,11 @@ namespace AddresssBook
             {
                 options.UseNpgsql(Configuration.GetConnectionString("AddressBookCS"));
             });
+
+            services.AddScoped<IImageService, BasicImageService>();
+
             services.AddControllersWithViews();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
