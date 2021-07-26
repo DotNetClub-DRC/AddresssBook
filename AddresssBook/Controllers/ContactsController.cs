@@ -1,22 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using AddresssBook.Data;
+using AddresssBook.Models;
+using AddresssBook.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using AddresssBook.Data;
-using AddresssBook.Models;
 
 namespace AddresssBook.Controllers
 {
     public class ContactsController : Controller
     {
         private readonly AddressBookContext _context;
+        private readonly IImageService _imageService;
 
-        public ContactsController(AddressBookContext context)
+        public ContactsController(AddressBookContext context, IImageService imageService)
         {
             _context = context;
+            _imageService = imageService;
         }
 
         // GET: Contacts
@@ -50,14 +51,19 @@ namespace AddresssBook.Controllers
         }
 
         // POST: Contacts/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,address1,address2,City,State,Zip,Email,Phone,Created,ImageData,ImageType")] Contact contact)
+        public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,address1,address2,City,State,Zip,Email,Phone,Created,ImageData,ImageFile")] Contact contact)
         {
             if (ModelState.IsValid)
             {
+
+                if (contact.ImageFile is not null)
+                {
+                    contact.ImageData = await _imageService.ConvertFileToByteArrayAsync(contact.ImageFile);
+                    contact.ImageType = contact.ImageFile.ContentType;
+                }
+                contact.Created = DateTime.Now;
                 _context.Add(contact);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -82,8 +88,6 @@ namespace AddresssBook.Controllers
         }
 
         // POST: Contacts/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,FirstName,LastName,address1,address2,City,State,Zip,Email,Phone,Created,ImageData,ImageType")] Contact contact)
