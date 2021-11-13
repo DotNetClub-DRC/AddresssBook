@@ -1,6 +1,7 @@
 ﻿using AddresssBook.Data;
 using AddresssBook.Services;
 using AddresssBook.Services.Interfaces;
+using AddresssBook.Ultilities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -24,7 +25,7 @@ namespace AddresssBook
         {
             services.AddDbContext<AddressBookContext>(options =>
             {
-                options.UseNpgsql(Configuration.GetConnectionString("AddressBookCS"));
+                options.UseNpgsql(DataUtility.GetConectionString(Configuration));
             });
 
             services.AddScoped<IImageService, BasicImageService>();
