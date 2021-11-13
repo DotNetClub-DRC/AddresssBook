@@ -6,7 +6,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace AddresssBook
 {
-    public class Program
+    public static class Program
     {
         public static async void Main(string[] args)
         {
